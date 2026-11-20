@@ -1,0 +1,377 @@
+==========================================
+SLURM_JOB_ID = 2717838
+SLURM_NODELIST = gnode057
+SLURM_JOB_GPUS = 0,1,2,3
+==========================================
+==========================================
+SLURM_JOB_ID       = 2717838
+SLURM_NODELIST      = gnode057
+SLURM_JOB_GPUS     = 0,1,2,3
+==========================================
+=== nvidia-smi ===
+Sun Sep 27 00:02:25 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 570.211.01             Driver Version: 570.211.01     CUDA Version: 12.8     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA GeForce RTX 2080 Ti     Off |   00000000:02:00.0 Off |                  N/A |
+| 30%   33C    P0             67W /  250W |       0MiB /  11264MiB |      1%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA GeForce RTX 2080 Ti     Off |   00000000:03:00.0 Off |                  N/A |
+| 31%   33C    P0             58W /  250W |       0MiB /  11264MiB |      1%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   2  NVIDIA GeForce RTX 2080 Ti     Off |   00000000:82:00.0 Off |                  N/A |
+| 31%   33C    P0             57W /  250W |       0MiB /  11264MiB |      1%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   3  NVIDIA GeForce RTX 2080 Ti     Off |   00000000:83:00.0 Off |                  N/A |
+| 30%   33C    P0             67W /  250W |       0MiB /  11264MiB |      1%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+===================
+W0927 00:02:29.542000 950954 torch/distributed/run.py:766] 
+W0927 00:02:29.542000 950954 torch/distributed/run.py:766] *****************************************
+W0927 00:02:29.542000 950954 torch/distributed/run.py:766] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0927 00:02:29.542000 950954 torch/distributed/run.py:766] *****************************************
+Imports and seed completed
+Imports and seed completed
+Imports and seed completed
+Imports and seed completed
+Using device: cuda:0
+Total valid sentences after processing: 213576
+Dataset sizes (Train/Dev/Test): 170860 21357 21359
+Labels created (excl. lemma&suffix — handled by attention+copy seq2seq)
+  pos: 24 classes
+  lexcat: 10 classes
+  person: 6 classes
+  num: 5 classes
+  gender: 8 classes
+  case: 4 classes
+  chunk: 18 classes
+Char vocabulary: 135 tokens (incl. PAD/SOS/EOS/UNK)
+Saved metadata to metadata_v8.json and metadata_v7.json
+Log-smoothed class weights calculated.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+DataLoader logic complete
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 20429.97it/s]
+Loading weights: 100%|██████████| 199/199 [00:00<00:00, 20074.71it/s]
+Loading weights: 100%|██████████| 199/199 [00:00<00:00, 20576.03it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: google/muril-base-cased
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.predictions.decoder.bias               | UNEXPECTED |  | 
+cls.predictions.decoder.weight             | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+cls.predictions.bias                       | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+[transformers] [1mBertModel LOAD REPORT[0m from: google/muril-base-cased
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.predictions.decoder.bias               | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.predictions.decoder.weight             | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.bias                       | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+[transformers] [1mBertModel LOAD REPORT[0m from: google/muril-base-cased
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.decoder.bias               | UNEXPECTED |  | 
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.predictions.decoder.weight             | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 17333.99it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: google/muril-base-cased
+Key                                        | Status     |  | 
+-------------------------------------------+------------+--+-
+cls.seq_relationship.bias                  | UNEXPECTED |  | 
+cls.predictions.transform.dense.bias       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED |  | 
+cls.predictions.decoder.bias               | UNEXPECTED |  | 
+cls.predictions.bias                       | UNEXPECTED |  | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED |  | 
+cls.predictions.decoder.weight             | UNEXPECTED |  | 
+cls.predictions.transform.dense.weight     | UNEXPECTED |  | 
+cls.seq_relationship.weight                | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+Model, Optimizer, and Scheduler ready
+Epoch 1 | Train 26.5076 | Dev 10.1906 | TF_prob 1.000 | pos: 1.396/0.776 | lexcat: 0.910/0.553 | person: 0.549/0.269 | num: 0.477/0.264 | gender: 0.825/0.481 | case: 0.012/0.021 | chunk: 15.072/5.869 | lemma: 2.136/0.641 | suffix: 2.534/0.748 | tam: 2.775/0.919
+Epoch 2 | Train 5.8762 | Dev 3.5547 | TF_prob 0.964 | pos: 0.762/0.709 | lexcat: 0.540/0.499 | person: 0.264/0.244 | num: 0.253/0.243 | gender: 0.452/0.406 | case: 0.002/0.004 | chunk: 2.765/1.534 | lemma: 0.355/0.196 | suffix: 0.410/0.213 | tam: 0.526/0.270
+Epoch 3 | Train 2.8632 | Dev 2.1205 | TF_prob 0.929 | pos: 0.710/0.688 | lexcat: 0.504/0.479 | person: 0.243/0.235 | num: 0.234/0.233 | gender: 0.402/0.381 | case: 0.002/0.002 | chunk: 1.297/1.113 | lemma: 0.149/0.111 | suffix: 0.159/0.107 | tam: 0.194/0.126
+Epoch 4 | Train 1.6766 | Dev 1.2431 | TF_prob 0.893 | pos: 0.689/0.675 | lexcat: 0.486/0.468 | person: 0.231/0.231 | num: 0.225/0.227 | gender: 0.378/0.368 | case: 0.002/0.002 | chunk: 0.974/0.951 | lemma: 0.097/0.078 | suffix: 0.094/0.071 | tam: 0.107/0.078
+Epoch 5 | Train 0.8421 | Dev 0.5683 | TF_prob 0.857 | pos: 0.675/0.668 | lexcat: 0.476/0.459 | person: 0.228/0.226 | num: 0.220/0.221 | gender: 0.366/0.359 | case: 0.002/0.002 | chunk: 0.792/0.876 | lemma: 0.075/0.061 | suffix: 0.069/0.055 | tam: 0.075/0.058
+Epoch 6 | Train 0.1761 | Dev 0.0289 | TF_prob 0.821 | pos: 0.665/0.662 | lexcat: 0.469/0.455 | person: 0.226/0.225 | num: 0.218/0.219 | gender: 0.360/0.355 | case: 0.002/0.002 | chunk: 0.678/0.817 | lemma: 0.062/0.052 | suffix: 0.056/0.046 | tam: 0.059/0.047
+Epoch 7 | Train -0.4320 | Dev -0.4374 | TF_prob 0.786 | pos: 0.659/0.657 | lexcat: 0.463/0.452 | person: 0.223/0.224 | num: 0.214/0.217 | gender: 0.354/0.351 | case: 0.002/0.002 | chunk: 0.559/0.775 | lemma: 0.053/0.045 | suffix: 0.047/0.040 | tam: 0.048/0.040
+Epoch 8 | Train -0.8995 | Dev -0.7962 | TF_prob 0.750 | pos: 0.653/0.656 | lexcat: 0.460/0.451 | person: 0.222/0.221 | num: 0.213/0.216 | gender: 0.350/0.348 | case: 0.002/0.002 | chunk: 0.504/0.780 | lemma: 0.048/0.040 | suffix: 0.041/0.036 | tam: 0.042/0.036
+Epoch 9 | Train -1.3325 | Dev -1.1179 | TF_prob 0.714 | pos: 0.649/0.653 | lexcat: 0.457/0.449 | person: 0.220/0.222 | num: 0.212/0.214 | gender: 0.347/0.346 | case: 0.001/0.002 | chunk: 0.437/0.759 | lemma: 0.043/0.037 | suffix: 0.036/0.033 | tam: 0.037/0.032
+Epoch 10 | Train -1.6927 | Dev -1.3419 | TF_prob 0.679 | pos: 0.645/0.653 | lexcat: 0.454/0.448 | person: 0.218/0.221 | num: 0.211/0.213 | gender: 0.345/0.345 | case: 0.001/0.002 | chunk: 0.380/0.783 | lemma: 0.041/0.035 | suffix: 0.034/0.030 | tam: 0.035/0.030
+Epoch 11 | Train -1.9897 | Dev -1.5733 | TF_prob 0.643 | pos: 0.644/0.651 | lexcat: 0.453/0.447 | person: 0.219/0.220 | num: 0.210/0.212 | gender: 0.342/0.343 | case: 0.002/0.002 | chunk: 0.330/0.753 | lemma: 0.040/0.033 | suffix: 0.032/0.028 | tam: 0.032/0.028
+Epoch 12 | Train -2.2047 | Dev -1.7069 | TF_prob 0.607 | pos: 0.642/0.650 | lexcat: 0.452/0.445 | person: 0.219/0.220 | num: 0.209/0.211 | gender: 0.341/0.343 | case: 0.001/0.002 | chunk: 0.309/0.764 | lemma: 0.038/0.031 | suffix: 0.030/0.027 | tam: 0.030/0.027
+Epoch 13 | Train -2.4087 | Dev -1.8125 | TF_prob 0.571 | pos: 0.639/0.649 | lexcat: 0.449/0.445 | person: 0.218/0.220 | num: 0.209/0.211 | gender: 0.340/0.343 | case: 0.001/0.002 | chunk: 0.274/0.769 | lemma: 0.035/0.030 | suffix: 0.028/0.027 | tam: 0.028/0.026
+Epoch 14 | Train -2.5334 | Dev -1.8680 | TF_prob 0.536 | pos: 0.637/0.649 | lexcat: 0.449/0.445 | person: 0.217/0.220 | num: 0.209/0.211 | gender: 0.339/0.342 | case: 0.002/0.002 | chunk: 0.252/0.776 | lemma: 0.034/0.030 | suffix: 0.027/0.026 | tam: 0.027/0.026
+Epoch 15 | Train -2.5868 | Dev -1.8879 | TF_prob 0.500 | pos: 0.637/0.649 | lexcat: 0.449/0.445 | person: 0.219/0.220 | num: 0.209/0.211 | gender: 0.340/0.342 | case: 0.002/0.002 | chunk: 0.242/0.777 | lemma: 0.035/0.030 | suffix: 0.027/0.026 | tam: 0.027/0.025
+/home2/param.krishna/shallow_parser/myenv/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:4631: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+/home2/param.krishna/shallow_parser/myenv/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:4631: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+/home2/param.krishna/shallow_parser/myenv/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:4631: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+Training complete
+/home2/param.krishna/shallow_parser/myenv/lib/python3.10/site-packages/torch/distributed/distributed_c10d.py:4631: UserWarning: No device id is provided via `init_process_group` or `barrier `. Using the current device set by the user. 
+  warnings.warn(  # warn only once
+
+================ TEST TOKEN LEVEL RESULTS ================
+
+
+===== POS =====
+              precision    recall  f1-score   support
+
+          CC       0.97      0.98      0.98      1025
+          CL       0.94      1.00      0.97       101
+         DEM       1.00      1.00      1.00      2010
+         INJ       0.85      0.96      0.90       183
+        INTF       0.94      0.98      0.96       703
+          JJ       0.95      0.97      0.96      2943
+          NN       0.99      0.97      0.98     41502
+         NNP       0.86      0.94      0.90      3524
+         NST       0.95      0.98      0.97      2998
+         PRP       0.98      1.00      0.99      9593
+         PSP       0.98      0.99      0.99      2346
+          QC       0.98      0.99      0.98      3453
+          QF       0.97      0.98      0.98      1421
+          QO       0.99      0.99      0.99       143
+          RB       0.98      0.99      0.99      3709
+         RDP       0.82      0.76      0.79        85
+          RP       0.98      0.98      0.98      1319
+         SYM       1.00      1.00      1.00     33483
+         UNK       0.00      0.00      0.00         1
+          UT       0.99      1.00      0.99      1632
+        VAUX       0.92      0.96      0.94      1027
+          VM       0.99      0.99      0.99     28465
+          WQ       0.99      0.99      0.99      2571
+
+    accuracy                           0.98    144237
+   macro avg       0.91      0.93      0.92    144237
+weighted avg       0.98      0.98      0.98    144237
+
+
+===== LEXCAT =====
+              precision    recall  f1-score   support
+
+         adj       0.95      0.98      0.96      2989
+         adv       0.99      0.99      0.99      1526
+         avy       0.99      0.99      0.99     15554
+           n       0.99      0.99      0.99     48084
+         nst       0.95      0.97      0.96       891
+         num       1.00      1.00      1.00      2297
+          pn       0.99      1.00      0.99     10326
+        punc       1.00      1.00      1.00     33532
+           v       0.99      0.99      0.99     29038
+
+    accuracy                           0.99    144237
+   macro avg       0.98      0.99      0.99    144237
+weighted avg       0.99      0.99      0.99    144237
+
+
+===== PERSON =====
+              precision    recall  f1-score   support
+
+           1       0.60      1.00      0.75      1571
+           2       0.03      0.99      0.05      1550
+           3       0.19      1.00      0.33     12252
+         UNK       0.00      0.00      0.00    116577
+         any       0.53      1.00      0.69     12287
+
+    accuracy                           0.19    144237
+   macro avg       0.27      0.80      0.36    144237
+weighted avg       0.07      0.19      0.10    144237
+
+
+===== NUM =====
+              precision    recall  f1-score   support
+
+         UNK       0.00      0.00      0.00     56398
+         any       0.95      0.99      0.97     12286
+          pl       0.90      1.00      0.95     16781
+          sg       0.52      1.00      0.68     58772
+
+    accuracy                           0.61    144237
+   macro avg       0.59      0.75      0.65    144237
+weighted avg       0.40      0.61      0.47    144237
+
+
+===== GENDER =====
+              precision    recall  f1-score   support
+
+         UNK       0.00      0.00      0.00     67995
+         any       0.88      0.99      0.93      9661
+           f       0.79      0.99      0.88      1919
+          fm       0.56      0.98      0.71      3987
+          fn       0.44      1.00      0.61      4873
+           m       0.57      0.99      0.72      7776
+           n       0.48      0.99      0.65     48026
+
+    accuracy                           0.52    144237
+   macro avg       0.53      0.85      0.64    144237
+weighted avg       0.29      0.52      0.37    144237
+
+
+===== CASE =====
+              precision    recall  f1-score   support
+
+         UNK       1.00      0.00      0.01    144193
+       [UNK]       0.00      0.00      0.00         0
+           d       0.00      1.00      0.00        17
+           o       0.00      1.00      0.00        27
+
+    accuracy                           0.00    144237
+   macro avg       0.25      0.50      0.00    144237
+weighted avg       1.00      0.00      0.01    144237
+
+
+===== CHUNK =====
+              precision    recall  f1-score   support
+
+       B-BLK       0.96      0.96      0.96      6367
+       B-CCP       0.97      0.98      0.97      1024
+       B-JJP       0.87      0.87      0.87       385
+        B-NP       0.98      0.98      0.98     59033
+       B-RBP       0.97      0.97      0.97      3708
+       B-VGF       0.98      0.97      0.98     18598
+      B-VGNF       0.94      0.95      0.95      9467
+      B-VGNN       0.80      0.84      0.82       398
+       I-BLK       0.91      0.93      0.92       859
+       I-CCP       0.92      0.97      0.95       154
+       I-JJP       0.89      0.90      0.89       176
+        I-NP       0.96      0.96      0.96     24937
+       I-RBP       0.88      0.89      0.89       446
+       I-VGF       0.99      0.98      0.98     18050
+      I-VGNF       0.74      0.77      0.76       531
+      I-VGNN       0.70      0.70      0.70       104
+
+    accuracy                           0.97    144237
+   macro avg       0.90      0.91      0.91    144237
+weighted avg       0.97      0.97      0.97    144237
+
+
+===== LEMMA (Attention + Copy Seq2Seq) =====
+Exact Match Accuracy: 0.9638  (139009/144237)
+
+===== SUFFIX (Attention Seq2Seq, no copy) =====
+Exact Match Accuracy: 0.9814  (141551/144237)
+
+Sample lemma predictions (first 30):
+  [OK]  word='మీకు'  gold='మీరు'  pred='మీరు'
+  [OK]  word='తెలుసా'  gold='తెలుసా'  pred='తెలుసా'
+  [OK]  word='?'  gold='&qus;'  pred='&qus;'
+  [OK]  word='శాంతి'  gold='శాంతి'  pred='శాంతి'
+  [OK]  word='పప్పుతో'  gold='పప్పు'  pred='పప్పు'
+  [OK]  word='అన్నం'  gold='అన్నం'  pred='అన్నం'
+  [OK]  word='తింటున్నది'  gold='తిను'  pred='తిను'
+  [OK]  word='.'  gold='&dot;'  pred='&dot;'
+  [OK]  word='వాడు'  gold='వాడు'  pred='వాడు'
+  [OK]  word='రహస్యంగా'  gold='రహస్యం'  pred='రహస్యం'
+  [OK]  word='మంత్రికి'  gold='మంత్రి'  pred='మంత్రి'
+  [OK]  word='ముడుపులు'  gold='ముడుపు'  pred='ముడుపు'
+  [X]  word='చెల్లించుకొన్నాడు'  gold='చెల్లించుకో'  pred='చెల్లించు'
+  [OK]  word='.'  gold='&dot;'  pred='&dot;'
+  [OK]  word='*'  gold='&lowast;'  pred='&lowast;'
+  [OK]  word='పైపాటుగా'  gold='పైపాటు'  pred='పైపాటు'
+  [OK]  word='వేసే'  gold='వెయ్యి'  pred='వెయ్యి'
+  [OK]  word='ఎరువులను'  gold='ఎరువు'  pred='ఎరువు'
+  [OK]  word='మొక్కల'  gold='మొక్క'  pred='మొక్క'
+  [OK]  word='పక్క'  gold='పక్క'  pred='పక్క'
+  [OK]  word='రంధ్రం'  gold='రంధ్రం'  pred='రంధ్రం'
+  [OK]  word='చేసి'  gold='చెయ్యి'  pred='చెయ్యి'
+  [OK]  word='వెయ్యాలి'  gold='వెయ్యి'  pred='వెయ్యి'
+  [OK]  word='.'  gold='&dot;'  pred='&dot;'
+  [OK]  word='కోదండంది'  gold='కోదండం'  pred='కోదండం'
+  [OK]  word='చిన్న'  gold='చిన్న'  pred='చిన్న'
+  [OK]  word='పల్లెటూరు'  gold='పల్లెటూరు'  pred='పల్లెటూరు'
+  [OK]  word='.'  gold='&dot;'  pred='&dot;'
+  [OK]  word='00'  gold='00'  pred='00'
+  [X]  word='చిట్ట'  gold='చిట్టం'  pred='చిట్ట'
+
+Sample suffix predictions (first 30):
+  [OK]  gold='కి'  pred='కి'
+  [OK]  gold='0'  pred='0'
+  [OK]  gold='UNK'  pred='UNK'
+  [OK]  gold='0'  pred='0'
+  [OK]  gold='తో'  pred='తో'
+  [OK]  gold='0'  pred='0'
+  [OK]  gold='తున్న_అది'  pred='తున్న_అది'
+  [OK]  gold='UNK'  pred='UNK'
+  [OK]  gold='0'  pred='0'
+  [OK]  gold='గా'  pred='గా'
+  [OK]  gold='కి'  pred='కి'
+  [OK]  gold='0'  pred='0'
+  [X]  gold='ఆ'  pred='కొన్_ఆ'
+  [OK]  gold='UNK'  pred='UNK'
+  [OK]  gold='UNK'  pred='UNK'
+  [X]  gold='గా'  pred='0'
+  [OK]  gold='ఏ'  pred='ఏ'
+  [OK]  gold='ని'  pred='ని'
+  [OK]  gold='ఓబ్ల్'  pred='ఓబ్ల్'
+  [OK]  gold='0'  pred='0'
+  [OK]  gold='0'  pred='0'
+  [OK]  gold='ఇ'  pred='ఇ'
+  [OK]  gold='ఆలి'  pred='ఆలి'
+  [OK]  gold='UNK'  pred='UNK'
+  [OK]  gold='ది'  pred='ది'
+  [OK]  gold='0'  pred='0'
+  [OK]  gold='0'  pred='0'
+  [OK]  gold='UNK'  pred='UNK'
+  [OK]  gold='UNK'  pred='UNK'
+  [X]  gold='ఓబ్ల్'  pred='0'
+
+================ SUMMARY METRICS (TEST) ================
+
+POS      | Acc: 0.9839 | Macro P/R/F1: 0.9145 / 0.9303 / 0.9220 | Weighted F1: 0.9840
+LEXCAT   | Acc: 0.9918 | Macro P/R/F1: 0.9835 / 0.9900 / 0.9867 | Weighted F1: 0.9918
+PERSON   | Acc: 0.1913 | Macro P/R/F1: 0.2696 / 0.7970 / 0.3635 | Weighted F1: 0.0951
+NUM      | Acc: 0.6062 | Macro P/R/F1: 0.5931 / 0.7464 / 0.6503 | Weighted F1: 0.4708
+GENDER   | Acc: 0.5243 | Macro P/R/F1: 0.5320 / 0.8486 / 0.6438 | Weighted F1: 0.3688
+CASE     | Acc: 0.0030 | Macro P/R/F1: 0.2502 / 0.5007 / 0.0018 | Weighted F1: 0.0054
+CHUNK    | Acc: 0.9704 | Macro P/R/F1: 0.9032 / 0.9148 / 0.9089 | Weighted F1: 0.9705
+LEMMA    | Exact Match Acc: 0.9638
+SUFFIX   | Exact Match Acc: 0.9814
+TAM      | Exact Match Acc: 0.9803

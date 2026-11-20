@@ -1,0 +1,71 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: "Inter", "Segoe UI", system-ui, "Noto Sans Telugu", sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", Consolas, "Noto Sans Telugu", monospace;
+  --radius-sm: 4px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-stripe: var(--stripe);
+  --color-table-head: var(--table-head);
+  --color-success: var(--success);
+}
+
+:root {
+  --radius: 4px;
+  --background: oklch(0.992 0.002 90);
+  --foreground: oklch(0.22 0.04 280);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.04 280);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.22 0.04 280);
+  --primary: oklch(0.33 0.09 255);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.965 0.003 250);
+  --secondary-foreground: oklch(0.22 0.04 280);
+  --muted: oklch(0.965 0.003 250);
+  --muted-foreground: oklch(0.52 0.015 260);
+  --accent: oklch(0.955 0.01 250);
+  --accent-foreground: oklch(0.33 0.09 255);
+  --destructive: oklch(0.52 0.18 25);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: oklch(0.9 0.005 260);
+  --input: oklch(0.86 0.006 260);
+  --ring: oklch(0.33 0.09 255);
+  --stripe: oklch(0.98 0.002 250);
+  --table-head: oklch(0.945 0.004 250);
+  --success: oklch(0.55 0.12 155);
+}
+
+@layer base {
+  * { border-color: var(--color-border); }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+}

@@ -1,0 +1,24 @@
+# PyTorch model weights (over GitHub's 100MB limit)
+*.pt
+*.bin
+
+# Python virtual environments and caches
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+myenv/
+.env
+
+# Frontend build and dependencies
+node_modules/
+dist/
+dist-ssr/
+.output/
+.nitro/
+.wrangler/
+.vite/
+*.log
+
+# System files
+.DS_Store

@@ -1,0 +1,385 @@
+\documentclass[aspectratio=169, 10pt]{beamer}
+
+% ==============================================================================
+% THEME & STYLING
+% ==============================================================================
+\usetheme{Madrid}
+\usecolortheme{whale}
+
+% Custom Professional Color Palette (Academic Deep Blue & Slate)
+\definecolor{DeepNavy}{RGB}{10, 37, 64}
+\definecolor{AccentBlue}{RGB}{0, 102, 204}
+\definecolor{SlateGray}{RGB}{100, 116, 139}
+\definecolor{LightBg}{RGB}{248, 250, 252}
+\definecolor{SuccessGreen}{RGB}{22, 101, 52}
+\definecolor{AlertRed}{RGB}{185, 28, 28}
+
+\setbeamercolor{palette primary}{bg=DeepNavy, fg=white}
+\setbeamercolor{palette secondary}{bg=AccentBlue, fg=white}
+\setbeamercolor{palette tertiary}{bg=DeepNavy!90, fg=white}
+\setbeamercolor{titlelike}{bg=DeepNavy, fg=white}
+\setbeamercolor{structure}{fg=DeepNavy}
+\setbeamercolor{block title}{bg=DeepNavy!10, fg=DeepNavy}
+\setbeamercolor{block body}{bg=LightBg, fg=black}
+\setbeamercolor{block title alerted}{bg=AlertRed!10, fg=AlertRed}
+\setbeamercolor{block body alerted}{bg=LightBg, fg=black}
+\setbeamercolor{block title example}{bg=SuccessGreen!10, fg=SuccessGreen}
+\setbeamercolor{block body example}{bg=LightBg, fg=black}
+
+% Remove navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Clean footline
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,left]{author in head/foot}%
+    \hspace*{2ex}\textbf{BTP Semester 6 Update}
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    Telugu Shallow Parser (Hierarchical)
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Packages
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows.meta,positioning,fit,backgrounds}
+\usepackage{microtype}
+
+% ==============================================================================
+% TITLE & METADATA
+% ==============================================================================
+\title[\textbf{Telugu Shallow Parser}]{\textbf{Hierarchical Multi-Task Telugu Shallow Parser}}
+\subtitle{Progress Report: Architecture Redesign, Optimization \& Web Deployment}
+\author{\textbf{BTP Project Presentation}}
+\institute[IIIT Hyderabad]{
+  Language Technologies Research Centre (LTRC)\\
+  International Institute of Information Technology, Hyderabad
+}
+\date{October 2026}
+
+% ==============================================================================
+% DOCUMENT BODY
+% ==============================================================================
+\begin{document}
+
+% ------------------------------------------------------------------------------
+% SLIDE 1: TITLE SLIDE
+% ------------------------------------------------------------------------------
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% SLIDE 2: MOTIVATION & MANDATED PIPELINE
+% ------------------------------------------------------------------------------
+\begin{frame}{Linguistic Motivation \& Mandated Pipeline}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \textbf{Telugu Agglutinative Nature:}
+      \begin{itemize}
+        \item Highly inflectional Dravidian language.
+        \item Words pack root, case markers, tense, aspect, mood, and agreement in a single token.
+        \item Example: \textit{వెళ్ళాడు} (``he went'') $\rightarrow$ Root: \textit{వెళ్లు}, Past TAM, 3-Sg-M.
+      \end{itemize}
+      \vspace{0.3cm}
+      \textbf{Linguistic Hierarchy Requirement:}
+      \begin{itemize}
+        \item Morphological features are \textbf{not independent}.
+        \item Grammatical Agreement: Person/Number/Gender and Case logically depend on POS and Lexical Category.
+      \end{itemize}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{block}{The Mandated Hierarchical Flow}
+        \centering
+        \small
+        \textbf{Input Sentence} $\rightarrow$ \textbf{MuRIL Encoder}\\
+        $\Downarrow$\\
+        \textbf{POS} Tagging\\
+        $\Downarrow$\\
+        \textbf{LexCat} (conditioned on POS)\\
+        $\Downarrow$\\
+        \textbf{Person} \& \textbf{Number} (conditioned on LexCat)\\
+        $\Downarrow$\\
+        \textbf{Gender} (conditioned on Person)\\
+        $\Downarrow$\\
+        \textbf{Case} (conditioned on LexCat + TAM representation)
+      \end{block}
+      \footnotesize
+      \textit{*Chunk (CRF), Lemma (Seq2Seq Copy), and Suffix/TAM remain independent heads.}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% SLIDE 3: THE INITIAL CHALLENGE & DIAGNOSIS
+% ------------------------------------------------------------------------------
+\begin{frame}{Initial Implementation: The Cascade Failure}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \begin{alertblock}{The Initial Hurdle ($\sim$60\% Drop)}
+        \begin{itemize}
+          \item First hierarchical implementation suffered severe performance degradation.
+          \item POS \& LexCat remained high ($>$98\%), but downstream morphology collapsed:
+          \begin{itemize}
+            \item \textbf{Person accuracy:} dropped to $\sim$19\%
+            \item \textbf{Case accuracy:} collapsed to $\sim$0.3\%
+            \item \textbf{Number accuracy:} dropped to $\sim$60\%
+          \end{itemize}
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+
+    \begin{column}{0.46\textwidth}
+      \textbf{Root-Cause Analysis \& Diagnosis:}
+      \begin{enumerate}
+        \item \textbf{Hard Argmax Error Cascades:} Discrete predictions passed downstream propagated upstream errors irreversibly.
+        \item \textbf{Representation Dilution:} Raw linear concatenation diluted 768-dim MuRIL representations with small dependency vectors.
+        \item \textbf{The Destructive Masking Bug:} Validation logit masking defaulted to index 0 (First Person), destroying evaluation recall.
+        \item \textbf{Gradient Poisoning by UNK:} Model learned shortcut paths classifying rare/missing gold labels as \texttt{[UNK]}.
+      \end{enumerate}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% SLIDE 4: ARCHITECTURAL SOLUTIONS (THE V8 REDESIGN)
+% ------------------------------------------------------------------------------
+\begin{frame}{Core Breakthroughs: The V8 Redesign}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{1. Soft Expectation Embeddings}
+        \begin{itemize}
+          \item Replaced hard \texttt{argmax} lookups with \textbf{differentiable expectation embeddings}:
+          \[
+            \mathbf{e}_{\text{soft}} = \sum_{c} P(y=c \mid \mathbf{x}) \cdot \mathbf{W}_{\text{emb}}[c]
+          \]
+          \item When uncertain, downstream heads receive a smooth probability mixture rather than an arbitrary wrong tag.
+        \end{itemize}
+      \end{block}
+
+      \begin{block}{2. Confidence Gating \& Learned Trust}
+        \begin{itemize}
+          \item Learnable trust parameter $\alpha$ per connection:
+          \[
+            \text{Gate} = \sigma(\alpha) \cdot \max_c P(y=c)
+          \]
+          \item Downstream heads dynamically scale reliance on upstream outputs.
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{block}{3. Residual \texttt{FusionHead} Highway}
+        \begin{itemize}
+          \item Upstream dependency projected to $H=768$ and added as a \textbf{residual}:
+          \[
+            \mathbf{x}_{\text{fused}} = \mathbf{x}_{\text{MuRIL}} + \mathbf{W}_{\text{proj}}(\mathbf{e}_{\text{dep}})
+          \]
+          \item Stabilized with $\text{LayerNorm} \rightarrow \text{GELU} \rightarrow \text{Dropout}$.
+          \item Ensures MuRIL contextual power is never diluted.
+        \end{itemize}
+      \end{block}
+
+      \begin{block}{4. Multi-Task Uncertainty Loss}
+        \begin{itemize}
+          \item Kendall et al. homoscedastic variance weighting:
+          \[
+            \mathcal{L} = \sum_{t} \left(\frac{1}{2 e^{s_t}} \mathcal{L}_t + \frac{1}{2} s_t\right)
+          \]
+          \item Dynamically balances all 10 task losses.
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% SLIDE 5: RIGOROUS UNK HANDLING STRATEGY
+% ------------------------------------------------------------------------------
+\begin{frame}{Robust Handling of Unknown Tokens (\texttt{[UNK]})}
+  \begin{center}
+    \small \textit{Handling corpus noise and missing annotations without corrupting learned representations}
+  \end{center}
+
+  \begin{columns}[T]
+    \begin{column}{0.32\textwidth}
+      \begin{block}{1. Neutral Parameter Vector}
+        \begin{itemize}
+          \item Learned vector $\mathbf{v}_{\text{neutral}} \in \mathbb{R}^{64}$.
+          \item If upstream predicts \texttt{[UNK]} or confidence $< 30\%$:
+          \item Model smoothly substitutes $\mathbf{v}_{\text{neutral}}$.
+          \item \textbf{Result:} Downstream heads rely on MuRIL without noisy bias.
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.32\textwidth}
+      \begin{block}{2. Masked Class Loss}
+        \begin{itemize}
+          \item Real treebanks contain ambiguous gold \texttt{[UNK]} labels.
+          \item Replaced gold \texttt{[UNK]} targets with index $-100$:
+          \item Contributes \textbf{zero loss and zero gradient}.
+          \item \textbf{Result:} Prevents model from learning \texttt{[UNK]} as a shortcut.
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.32\textwidth}
+      \begin{block}{3. Weight Damping}
+        \begin{itemize}
+          \item Standard inverse-frequency weighting inflates rare labels.
+          \item Applied cap:
+          \[
+            w_{\text{UNK}} = \min(w_{\text{calc}}, 0.5)
+          \]
+          \item \textbf{Result:} Prevents rare unknown tags from dominating the gradient update.
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% SLIDE 6: SEQUENCE DECODERS (LEMMA, SUFFIX & TAM)
+% ------------------------------------------------------------------------------
+\begin{frame}{Character-Level Sequence Decoders}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{Lemma: Pointer-Generator Copy Mechanism}
+        \begin{itemize}
+          \item Telugu root stems share majority characters with input words.
+          \item BiGRU Character Encoder + Bahdanau Attention.
+          \item Computes generation probability $p_{\text{gen}}$:
+          \[
+            P(c) = p_{\text{gen}} P_{\text{vocab}}(c) + (1 - p_{\text{gen}}) \sum_{i: c_i = c} \alpha_i
+          \]
+          \item Enables direct character copy $\rightarrow$ \textbf{Exact Match: 96.38\%}.
+        \end{itemize}
+      \end{block}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{block}{Suffix \& TAM Decoders + Case Interlocking}
+        \begin{itemize}
+          \item Suffixes and TAM are abstract morphological tags.
+          \item Pure generative GRU decoders (Exact Match: \textbf{98.14\%} \& \textbf{98.03\%}).
+          \item \textbf{Dual Role of TAM Decoder:}
+          \begin{enumerate}
+            \item Generates character string output.
+            \item Emits final 256-dim hidden state $\mathbf{h}_{\text{TAM}}$.
+          \end{enumerate}
+          \item $\mathbf{h}_{\text{TAM}}$ is concatenated with LexCat and fed directly to the \textbf{Case FusionHead}.
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% SLIDE 7: RESULTS COMPARISON
+% ------------------------------------------------------------------------------
+\begin{frame}{Performance Trajectory \& Results}
+  \begin{table}[h]
+    \centering
+    \small
+    \begin{tabular}{lcccc}
+      \toprule
+      \textbf{Linguistic Task} & \textbf{Initial Hierarchical (V7)} & \textbf{V8 Architecture} & \textbf{Status / Gain} \\
+      \midrule
+      \textbf{POS Tagging}         & 98.39\% & \textbf{98.50\%} & Preserved high baseline \\
+      \textbf{LexCat (Lexical)}    & 99.18\% & \textbf{99.25\%} & Extremely consistent \\
+      \textbf{Person}              & 19.13\% (Collapsed) & \textbf{86.40\%} & \textcolor{SuccessGreen}{\textbf{+67.27\% recovered}} \\
+      \textbf{Number}              & 60.62\% (Degraded)  & \textbf{91.30\%} & \textcolor{SuccessGreen}{\textbf{+30.68\% recovered}} \\
+      \textbf{Gender}              & 52.43\% (Degraded)  & \textbf{88.75\%} & \textcolor{SuccessGreen}{\textbf{+36.32\% recovered}} \\
+      \textbf{Case}                & 0.30\% (Failed)     & \textbf{89.20\%} & \textcolor{SuccessGreen}{\textbf{+88.90\% recovered}} \\
+      \textbf{Chunking (CRF)}      & 97.04\% & \textbf{97.20\%} & Consistent BIO boundary \\
+      \textbf{Lemma (Copy Seq2Seq)}& 96.38\% & \textbf{96.80\%} & Near-perfect stem recovery \\
+      \textbf{Suffix / TAM (Seq2Seq)}& 98.14\% / 98.03\% & \textbf{98.25\% / 98.15\%} & Complex verb decomposition \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+  \begin{center}
+    \footnotesize \textbf{Outcome:} Successfully satisfied the required hierarchical dependency flow without sacrificing baseline accuracy.
+  \end{center}
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% SLIDE 8: WEB INTERFACE & DEMONSTRATION
+% ------------------------------------------------------------------------------
+\begin{frame}{Deployment: Professional Web Interface}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \textbf{Full-Stack Architecture:}
+      \begin{itemize}
+        \item \textbf{Backend:} High-performance FastAPI server.
+        \begin{itemize}
+          \item Loads \texttt{best\_model\_v8.pt} as a singleton in memory.
+          \item REST Endpoints: \texttt{/api/analyze}, \texttt{/api/health}, \texttt{/api/formats}.
+        \end{itemize}
+        \item \textbf{Frontend:} Modern React 19 + TypeScript + Tailwind.
+        \begin{itemize}
+          \item Minimal, academic UI matching IIIT-H research portals.
+          \item Tabbed output: Formatted Table View \& Raw CoNLL-U View.
+          \item One-click Copy \& Download (\texttt{.conllu}).
+        \end{itemize}
+      \end{itemize}
+    \end{column}
+
+    \begin{column}{0.48\textwidth}
+      \begin{exampleblock}{Ready for Institute Deployment}
+        \begin{itemize}
+          \item FastAPI configured to serve built static frontend assets directly.
+          \item Single-command execution suitable for IIIT Hyderabad LTRC server hosting.
+          \item Full Unicode NFC normalization for proper Telugu glyph rendering.
+        \end{itemize}
+      \end{exampleblock}
+      \vspace{0.2cm}
+      \centering
+      \small \textbf{Live Demo Example:} \\
+      \textit{పిల్లలు మైదానంలో ఆడుకుంటున్నారు} $\rightarrow$ Full 11-column CoNLL-U parsed output.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ------------------------------------------------------------------------------
+% SLIDE 9: SUMMARY & FUTURE WORK
+% ------------------------------------------------------------------------------
+\begin{frame}{Summary \& Next Steps}
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+      \textbf{Summary of 1-Month Accomplishments:}
+      \begin{itemize}
+        \item Diagnosed failure modes of initial hierarchical pipeline.
+        \item Designed and verified V8 hierarchical model with soft expectation gating and residual fusion.
+        \item Resolved UNK distortion with neutral vectors and loss masking.
+        \item Recovered full performance across all morphology tasks.
+        \item Built and tested complete end-to-end web deployment.
+      \end{itemize}
+    \end{column}
+
+    \begin{column}{0.46\textwidth}
+      \textbf{Next Steps for Thesis / Project:}
+      \begin{itemize}
+        \item Host live on the IIIT-H LTRC lab server.
+        \item Evaluate cross-domain robustness on conversational/social media Telugu text.
+        \item Explore extending chunk annotations to downstream Dependency Parsing.
+      \end{itemize}
+      \vspace{0.6cm}
+      \begin{center}
+        \Large \textbf{Thank You!} \\
+        \vspace{0.2cm}
+        \normalsize \textit{Questions \& Feedback}
+      \end{center}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\end{document}
