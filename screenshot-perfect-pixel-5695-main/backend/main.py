@@ -285,3 +285,10 @@ def serve_shallow_parser():
 # Production: serve the built frontend from the same process.
 if os.path.isdir(config.FRONTEND_DIST):
     app.mount("/", StaticFiles(directory=config.FRONTEND_DIST, html=True), name="frontend")
+
+
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False)
+

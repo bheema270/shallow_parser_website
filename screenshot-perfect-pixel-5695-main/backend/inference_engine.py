@@ -866,31 +866,32 @@ class InferenceEngine:
             pos_val = word_cls_preds.get("pos", ["-"] * (wi + 1))[wi] if wi < len(word_cls_preds.get("pos", [])) else "-"
             lexcat_val = word_cls_preds.get("lexcat", ["-"] * (wi + 1))[wi] if wi < len(word_cls_preds.get("lexcat", [])) else "-"
             case_val = word_cls_preds.get("case", ["-"] * (wi + 1))[wi] if wi < len(word_cls_preds.get("case", [])) else "-"
-            lemma_val = lemma_strings[wi] if wi < len(lemma_strings) else tok_clean
-            suffix_val = suffix_strings[wi] if wi < len(suffix_strings) else "-"
-            tam_val = tam_strings[wi] if wi < len(tam_strings) else "-"
+            # Helper: check if a generated seq2seq string contains any UNK token
+            def _has_unk(s):
+                return any(u in s for u in {"<UNK>", "[UNK]", "UNK"})
+
+            raw_lemma   = lemma_strings[wi]  if wi < len(lemma_strings)  else tok_clean
+            suffix_val  = suffix_strings[wi] if wi < len(suffix_strings) else "-"
+            tam_val     = tam_strings[wi]    if wi < len(tam_strings)    else "-"
+
+            # Lemma: if UNK appears anywhere in generated string → fall back to token (identity lemma)
+            lemma_val = tok_clean if _has_unk(raw_lemma) or not raw_lemma else raw_lemma
 
             # Linguistic rule: Case belongs strictly to nominals (nouns, pronouns, numbers)
             is_nominal = pos_val in {"NN", "NNP", "PRP", "NST", "DEM", "QC", "QF", "QO"} or lexcat_val in {"n", "pn", "nst", "num"}
             clean_case = case_val if is_nominal and case_val not in {"UNK", "[UNK]", "<UNK>"} else "_"
 
-            # Linguistic rule: TAM belongs strictly to verbs
-            is_verbal = pos_val in {"VM", "VAUX", "RP"} or lexcat_val in {"v"}
-            if is_verbal:
-                if tam_val in {"<UNK>", "UNK", "[UNK]", "", "-"}:
-                    clean_tam = "_"
-                else:
-                    clean_tam = tam_val.replace("<UNK>", "_").replace("[UNK]", "_")
-            else:
-                clean_tam = "_"
-
-            # Suffix cleanup:
-            # If punctuation/symbol or token == lemma or predicted UNK -> display '-'
+            # Suffix + TAM cleanup:
+            # If punctuation/symbol OR token == lemma (no morphological change) → suffix="-", TAM="_"
+            # If UNK appears anywhere in generated suffix/TAM string → suffix="-", TAM="_"
+            # Otherwise pass model's prediction as-is
             is_punc = pos_val in {"SYM", "punc"} or lexcat_val in {"punc"} or (len(tok_clean) == 1 and not tok_clean.isalnum())
-            if is_punc or tok_clean == lemma_val or suffix_val in {"<UNK>", "UNK", "[UNK]", ""}:
+            if is_punc or tok_clean == lemma_val:
                 clean_suffix = "-"
+                clean_tam = "_"
             else:
-                clean_suffix = suffix_val.replace("<UNK>", "_").replace("[UNK]", "_")
+                clean_suffix = "-" if _has_unk(suffix_val) or suffix_val in {"", "-"} else suffix_val
+                clean_tam    = "_" if _has_unk(tam_val)    or tam_val    in {"", "-"}  else tam_val
 
             entry = {
                 "id":     wi + 1,

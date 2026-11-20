@@ -22,3 +22,4 @@ dist-ssr/
 
 # System files
 .DS_Store
+*.conllu

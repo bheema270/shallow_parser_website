@@ -28,6 +28,12 @@ final_output_oc1/
 │   ├── README.md                          # Detailed web application setup instructions
 │   └── USER_GUIDE.md                      # Complete user guide and annotation manual
 │
+├── dataset/                               # Complete training datasets for all three models
+│   ├── README.md                          # Datasets breakdown & column specifications
+│   ├── v_9_dataset.conllu                 # Deduplicated dataset (121,823 sentences - for V9)
+│   ├── v_1_dataset.conllu                 # In-person verified combined set (32,006 sentences - for V1)
+│   └── v_8_dataset.conllu                 # Original raw baseline dataset (213,576 sentences - for V8)
+│
 ├── docs/                                  # Research documentation and evaluation logs
 │   ├── evaluation/                        # Training & evaluation run logs for each model
 │   │   ├── run_muril_v5_v9.txt            # V9 evaluation log (121K deduplicated sentences)
