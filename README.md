@@ -90,6 +90,23 @@ The platform integrates three distinct models which can be selected dynamically 
 
 ---
 
+## 📜 Scripts Directory Guide (`scripts/`)
+
+The `scripts/` directory contains standalone scripts for model training and CLI evaluation:
+
+| Script File | Purpose & Role | Model Generated | Dataset Used |
+| :--- | :--- | :--- | :--- |
+| **`parallel_training_v9.py`** | **Modern Training Script (Ma'am Architecture)**<br>Implements dual dependency for Gender ($E+E=128\text{d}$), active UNK training, and inference-time LexCat feature masking. | **`best_model_v9.pt`**<br>&<br>**`best_model_v1.pt`**<br>*(same script code)* | • **V9**: `whole_dataset.conllu` (121,823 deduplicated sentences)<br>• **V1**: `all_combined_set.conllu` (32,006 in-person verified sentences) |
+| **`parallel_training.py`** | **Legacy Training Script (Baseline Model)**<br>Original hierarchical multi-task script where Gender depended only on Person ($E=64\text{d}$) and UNK loss masking was active. | **`best_model_v8.pt`** | `whole_dataset_past.conllu` (213,576 raw sentences) |
+| **`inference.py`** | **Standalone CLI Inference Tool**<br>Direct terminal evaluation tool that runs predictions on Telugu sentences and prints styled ASCII/Rich tables without starting the web server. | — *(Evaluates using `best_model_v8.pt`)* | — |
+
+> **Important Note on V9 vs. V1 Generation**:
+> Both **`best_model_v9.pt`** and **`best_model_v1.pt`** were trained using the **exact same training code (`parallel_training_v9.py`)**. The only difference between them is the dataset passed to `DATA_FILE`:
+> - **V9** was trained on the full deduplicated dataset (`whole_dataset.conllu` — 121,823 sentences).
+> - **V1** was trained on the human/in-person verified combined dataset (`all_combined_set.conllu` — 32,006 sentences).
+
+---
+
 ## 🚀 How to Run the Website (Quick Start)
 
 ### 1. Setup & Run the Backend
