@@ -39,13 +39,13 @@ The platform includes **three distinct trained models**, allowing users and rese
   - **UNK Loss Masking Removed**: Model actively learns all valid "not applicable" / UNK labels instead of masking them out during training.
   - **Inference-Time LexCat Feature Masking**: Non-inflected word classes (punctuation, conjunctions, adverbs) are linguistically constrained to UNK.
 - **Training Data**: Full deduplicated corpus of **121,823 sentences** (reduced from the original 213K duplicates).
-- **Evaluation Log**: `docs/evaluation/run_muril_v5_v9.txt`
+- **Evaluation Log**: `docs/evaluation/evaluation_report_v9.txt`
 
 #### 2. `MuRIL MTL V1` — In-Person Verified Subset Model
 - **Architecture**: Identical code and architecture as V9 (Dual dependency, UNK training, LexCat masking).
 - **Training Data**: Specially curated multi-set corpus of **32,006 sentences** (`all_combined_set.conllu` combining Sets 1, 2, 4, 5, 6, 7).
 - **Key Advantage**: Annotations in this dataset were thoroughly reviewed and verified in-person, providing a cleaner, highly reliable training distribution.
-- **Evaluation Log**: `docs/evaluation/run_muril_v5_v1.txt`
+- **Evaluation Log**: `docs/evaluation/evaluation_report_v1.txt`
 
 #### 3. `MuRIL MTL V8` — Baseline / Legacy Dependency Model
 - **Architecture**: The original finalized model developed before incorporating Ma'am's architectural recommendations:
@@ -53,7 +53,7 @@ The platform includes **three distinct trained models**, allowing users and rese
   - UNK tokens were masked out of loss calculations during training.
 - **Training Data**: Original raw corpus of **213,576 sentences** (`whole_dataset_past.conllu`).
 - **Characteristics**: Exceptional performance on POS (98.39%), Chunking (97.04%), Lemma (96.38%), and TAM (98.03%), but suffered from low Person (19.13%) and Case (0.30%) due to UNK masking (which was solved in V9 and V1).
-- **Evaluation Log**: `docs/evaluation/run_muril_v5_v8.txt`
+- **Evaluation Log**: `docs/evaluation/evaluation_report_v8.txt`
 
 ---
 

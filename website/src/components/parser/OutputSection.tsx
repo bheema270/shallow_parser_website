@@ -3,9 +3,9 @@ import { Check, Copy, Download } from "lucide-react";
 import { OUTPUT_FORMATS, TABLE_COLUMNS } from "@/config";
 import type { AnalyzeResponse, ParsedToken } from "@/types/parser";
 
-function FormattedTable({ tokens }: { tokens: ParsedToken[] }) {
+function SingleSentenceTable({ tokens }: { tokens: ParsedToken[] }) {
   return (
-    <div className="overflow-x-auto rounded-sm border border-border">
+    <div className="overflow-x-auto rounded-sm border border-border bg-card">
       <table className="w-full border-collapse font-mono text-sm">
         <thead className="sticky top-0 bg-table-head">
           <tr>
@@ -17,17 +17,97 @@ function FormattedTable({ tokens }: { tokens: ParsedToken[] }) {
           </tr>
         </thead>
         <tbody lang="te">
-          {tokens.map((token) => (
-            <tr key={`${token.id}-${token.token}`} className="even:bg-stripe odd:bg-card">
-              {TABLE_COLUMNS.map((column) => (
-                <td key={column.key} className="whitespace-nowrap px-3 py-1.5 font-mono">
-                  {String(token[column.key])}
-                </td>
-              ))}
-            </tr>
-          ))}
+          {tokens.map((token, index) => {
+            const tokenNum = index + 1;
+            return (
+              <tr key={`${tokenNum}-${token.token}`} className="even:bg-stripe odd:bg-card">
+                {TABLE_COLUMNS.map((column) => (
+                  <td key={column.key} className="whitespace-nowrap px-3 py-1.5 font-mono">
+                    {column.key === "id" ? tokenNum : String(token[column.key])}
+                  </td>
+                ))}
+              </tr>
+            );
+          })}
         </tbody>
       </table>
+    </div>
+  );
+}
+
+function FormattedView({
+  sentences,
+  selectedSentence,
+  defaultTokens,
+  defaultSentence,
+}: {
+  sentences: { sentence_id: number; sentence: string; tokens: ParsedToken[] }[];
+  selectedSentence?: { sentence_id: number; sentence: string; tokens: ParsedToken[] };
+  defaultTokens: ParsedToken[];
+  defaultSentence: string;
+}) {
+  if (selectedSentence) {
+    return (
+      <div className="space-y-2">
+        <div className="flex items-center justify-between px-1">
+          <div className="flex items-baseline gap-2">
+            <span className="rounded bg-primary/10 px-2 py-0.5 font-mono text-xs font-semibold text-primary">
+              Sentence {selectedSentence.sentence_id}
+            </span>
+            <span className="font-serif text-sm font-medium text-foreground" lang="te">
+              "{selectedSentence.sentence}"
+            </span>
+          </div>
+          <span className="text-xs text-muted-foreground font-mono">
+            {selectedSentence.tokens.length} tokens
+          </span>
+        </div>
+        <SingleSentenceTable tokens={selectedSentence.tokens} />
+      </div>
+    );
+  }
+
+  if (sentences.length > 0) {
+    return (
+      <div className="space-y-6">
+        {sentences.map((sent) => (
+          <div key={sent.sentence_id} className="space-y-2 rounded-md border border-border/60 bg-muted/20 p-3">
+            <div className="flex items-center justify-between pb-1">
+              <div className="flex items-baseline gap-2">
+                <span className="rounded bg-primary/10 px-2 py-0.5 font-mono text-xs font-semibold text-primary">
+                  Sentence {sent.sentence_id}
+                </span>
+                <span className="font-serif text-sm font-medium text-foreground" lang="te">
+                  "{sent.sentence}"
+                </span>
+              </div>
+              <span className="text-xs text-muted-foreground font-mono">
+                {sent.tokens.length} tokens
+              </span>
+            </div>
+            <SingleSentenceTable tokens={sent.tokens} />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center justify-between px-1">
+        <div className="flex items-baseline gap-2">
+          <span className="rounded bg-primary/10 px-2 py-0.5 font-mono text-xs font-semibold text-primary">
+            Sentence 1
+          </span>
+          <span className="font-serif text-sm font-medium text-foreground" lang="te">
+            "{defaultSentence}"
+          </span>
+        </div>
+        <span className="text-xs text-muted-foreground font-mono">
+          {defaultTokens.length} tokens
+        </span>
+      </div>
+      <SingleSentenceTable tokens={defaultTokens} />
     </div>
   );
 }
@@ -132,7 +212,16 @@ export function OutputSection({ data }: { data: AnalyzeResponse }) {
           </span>
         )}
       </div>
-      {tab === "table" ? <FormattedTable tokens={displayedTokens} /> : <RawOutput raw={displayedRaw} />}
+      {tab === "table" ? (
+        <FormattedView
+          sentences={sentences}
+          selectedSentence={selectedSentence}
+          defaultTokens={displayedTokens}
+          defaultSentence={displayedText}
+        />
+      ) : (
+        <RawOutput raw={displayedRaw} />
+      )}
     </section>
   );
 }

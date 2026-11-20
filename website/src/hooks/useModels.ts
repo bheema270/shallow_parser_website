@@ -4,9 +4,11 @@ import type { ModelOption } from "@/types/parser";
 
 export function useModels() {
   const [models, setModels] = useState<ModelOption[]>([
-    { id: "v8", label: "MuRIL MTL V8 (Default)", is_default: true, model_file: "best_model_v8.pt" },
+    { id: "v1", label: "MuRIL MTL V1 (Curated 32K)", is_default: true, model_file: "best_model_v1.pt" },
+    { id: "v8", label: "MuRIL MTL V8 (Raw Baseline 213K)", is_default: false, model_file: "best_model_v8.pt" },
+    { id: "v9", label: "MuRIL MTL V9 (Deduplicated 121K)", is_default: false, model_file: "best_model_v9.pt" },
   ]);
-  const [selectedModel, setSelectedModel] = useState<string>("v8");
+  const [selectedModel, setSelectedModel] = useState<string>("v1");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {

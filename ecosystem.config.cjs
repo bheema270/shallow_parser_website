@@ -7,7 +7,7 @@ module.exports = {
     // ── 1. Python / FastAPI backend ─────────────────────────────────────
     {
       name: "shallow-parser-api",
-      cwd: "./screenshot-perfect-pixel-5695-main/backend",
+      cwd: "./website/backend",
       interpreter: "./venv/bin/python3",
       script: "main.py",
       env: {
@@ -17,8 +17,8 @@ module.exports = {
       autorestart: true,
       watch: false,
       max_memory_restart: "4G",
-      out_file: "../logs/api-out.log",
-      error_file: "../logs/api-err.log",
+      out_file: "./logs/api-out.log",
+      error_file: "./logs/api-err.log",
       merge_logs: true,
       log_date_format: "YYYY-MM-DD HH:mm:ss",
     },
@@ -26,7 +26,7 @@ module.exports = {
     // ── 2. Node.js / Nitro frontend ─────────────────────────────────────
     {
       name: "shallow-parser-web",
-      cwd: "./screenshot-perfect-pixel-5695-main/.output/server",
+      cwd: "./website/.output/server",
       interpreter: "node",
       script: "index.mjs",
       env: {
@@ -37,8 +37,8 @@ module.exports = {
       autorestart: true,
       watch: false,
       max_memory_restart: "1G",
-      out_file: "../logs/web-out.log",
-      error_file: "../logs/web-err.log",
+      out_file: "./logs/web-out.log",
+      error_file: "./logs/web-err.log",
       merge_logs: true,
       log_date_format: "YYYY-MM-DD HH:mm:ss",
     },

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "v1",
+    "label": "MuRIL MTL V1 (Curated 32K)",
+    "description": "High-precision model trained on 32,006 sentences with human-verified annotations.",
+    "model_file": "best_model_v1.pt",
+    "metadata_file": "metadata_v1.json",
+    "is_default": true
+  },
+  {
+    "id": "v8",
+    "label": "MuRIL MTL V8 (Raw Baseline 213K)",
+    "description": "Baseline model trained on 213,576 raw sentences with masked UNK.",
+    "model_file": "best_model_v8.pt",
+    "metadata_file": "metadata_v8.json",
+    "is_default": false
+  },
+  {
+    "id": "v9",
+    "label": "MuRIL MTL V9 (Deduplicated 121K)",
+    "description": "Hierarchical multi-task model trained on 121,000 deduplicated sentences.",
+    "model_file": "best_model_v9.pt",
+    "metadata_file": "metadata_v9.json",
+    "is_default": false
+  }
+]

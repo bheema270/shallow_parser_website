@@ -13,7 +13,7 @@ export const OUTPUT_FORMATS: OutputFormat[] = [
 ];
 
 export const TABLE_COLUMNS: { key: keyof ParsedToken; label: string }[] = [
-  { key: "id", label: "ID" },
+  { key: "id", label: "Token #" },
   { key: "token", label: "Token" },
   { key: "lemma", label: "Lemma" },
   { key: "pos", label: "POS" },

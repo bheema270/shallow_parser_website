@@ -9,22 +9,25 @@ This folder contains the complete trained models, research documentation, standa
 ```
 final_output_oc1/
 ├── README.md                              # This file (project overview & model guide)
+├── ecosystem.config.cjs                   # PM2 process configuration (root runner)
 │
-├── screenshot-perfect-pixel-5695-main/    # Full Web Application (Frontend + Backend)
+├── website/                               # Full Web Application (Frontend + Backend)
 │   ├── backend/
+│   │   ├── models_config.json             # Centralized Model Registry configuration
 │   │   ├── models/                        # Available trained models (.pt & .json)
-│   │   │   ├── best_model_v9.pt           # Finalized production model (Ma'am architecture, 121K)
-│   │   │   ├── metadata_v9.json
 │   │   │   ├── best_model_v1.pt           # In-person verified subset model (32K sentences)
 │   │   │   ├── metadata_v1.json
 │   │   │   ├── best_model_v8.pt           # Legacy baseline model (213K sentences)
-│   │   │   └── metadata_v8.json
+│   │   │   ├── metadata_v8.json
+│   │   │   ├── best_model_v9.pt           # Deduplicated full model (121K sentences)
+│   │   │   └── metadata_v9.json
 │   │   ├── main.py                        # FastAPI REST API with multi-model support
 │   │   ├── inference_engine.py            # High-performance MuRIL inference & IndicNLP
-│   │   ├── model_registry.py              # Automatic model discovery
+│   │   ├── model_registry.py              # Automatic model discovery from models_config.json
 │   │   ├── formatter.py                   # CoNLL-U format generator
 │   │   └── requirements.txt               # Complete Python package list
 │   ├── src/                               # React + Vite + TypeScript web interface
+│   ├── ecosystem.config.cjs               # PM2 process configuration (website runner)
 │   ├── README.md                          # Detailed web application setup instructions
 │   └── USER_GUIDE.md                      # Complete user guide and annotation manual
 │
@@ -36,17 +39,19 @@ final_output_oc1/
 │
 ├── docs/                                  # Research documentation and evaluation logs
 │   ├── evaluation/                        # Training & evaluation run logs for each model
-│   │   ├── run_muril_v5_v9.txt            # V9 evaluation log (121K deduplicated sentences)
-│   │   ├── run_muril_v5_v1.txt            # V1 evaluation log (32K verified subset)
-│   │   └── run_muril_v5_v8.txt            # V8 evaluation log (213K legacy sentences)
+│   │   ├── evaluation_report_v1.txt       # V1 evaluation log (32K verified subset)
+│   │   ├── evaluation_report_v8.txt       # V8 evaluation log (213K legacy sentences)
+│   │   └── evaluation_report_v9.txt       # V9 evaluation log (121K deduplicated sentences)
 │   ├── COMPLETE_BEGINNER_TO_EXPERT_CODE_STORY.md
 │   ├── DETAILED_CODE_AND_ARCHITECTURE_EXPLANATION.md
 │   └── presentation_btp_update.tex
 │
 └── scripts/                               # Standalone CLI and training scripts
-    ├── inference.py                       # CLI inference tool
-    ├── parallel_training.py               # Original training code
-    └── parallel_training_v9.py            # Enhanced training code
+    ├── README.md                          # Detailed guide for inference and training scripts
+    ├── inference.py                       # CLI terminal inference tool
+    ├── parallel_training.py               # V8 Baseline training script
+    ├── parallel_training_v9.py            # V9 Hierarchical training script
+    └── parallel_training_v10.py           # V10 Production-ready training script (UNK loss masked)
 ```
 
 ---
@@ -62,20 +67,20 @@ The platform integrates three distinct models which can be selected dynamically 
   - **Active UNK Training**: Removes UNK loss masking, allowing the model to properly learn "not applicable" cases.
   - **Inference-Time LexCat Feature Masking**: Non-inflected word types (punctuation, symbols, adverbs) are linguistically masked to UNK.
 - **Dataset**: Trained on the clean **deduplicated corpus of 121,823 sentences** (`whole_dataset.conllu`).
-- **Evaluation Log**: [`docs/evaluation/run_muril_v5_v9.txt`](file:///home/bheemasiddartha/Desktop/sem6/BTP/6_lakhs/final_output_oc1/docs/evaluation/run_muril_v5_v9.txt)
+- **Evaluation Log**: [`docs/evaluation/evaluation_report_v9.txt`](file:///home/bheemasiddartha/Desktop/sem6/BTP/6_lakhs/final_output_oc1/docs/evaluation/evaluation_report_v9.txt)
 
 ### 2. `MuRIL MTL V1` — In-Person Verified Subset Model
 - **Status**: Curated subset model using the exact same Ma'am architecture as V9.
 - **Dataset**: Trained on a focused combined dataset of **32,006 sentences** (`all_combined_set.conllu` across Sets 1, 2, 4, 5, 6, 7).
 - **Key Advantage**: All annotations were verified and checked in-person for consistency and high linguistic fidelity.
-- **Evaluation Log**: [`docs/evaluation/run_muril_v5_v1.txt`](file:///home/bheemasiddartha/Desktop/sem6/BTP/6_lakhs/final_output_oc1/docs/evaluation/run_muril_v5_v1.txt)
+- **Evaluation Log**: [`docs/evaluation/evaluation_report_v1.txt`](file:///home/bheemasiddartha/Desktop/sem6/BTP/6_lakhs/final_output_oc1/docs/evaluation/evaluation_report_v1.txt)
 
 ### 3. `MuRIL MTL V8` — Baseline / Legacy Dependency Model
 - **Status**: The primary finalized model before incorporating Ma'am's architectural revisions.
 - **Architecture**: Single dependency hierarchy where Gender depended only on Person ($64\text{d}$), and UNK tokens were masked out of loss computation during training.
 - **Dataset**: Trained on the original raw dataset of **213,576 sentences** (`whole_dataset_past.conllu`).
 - **Characteristics**: Strong on POS (98.39%), Chunking (97.04%), Lemma (96.38%), and TAM (98.03%), but suffered from lower accuracy on Person and Case due to UNK masking (which was fixed in V9 and V1).
-- **Evaluation Log**: [`docs/evaluation/run_muril_v5_v8.txt`](file:///home/bheemasiddartha/Desktop/sem6/BTP/6_lakhs/final_output_oc1/docs/evaluation/run_muril_v5_v8.txt)
+- **Evaluation Log**: [`docs/evaluation/evaluation_report_v8.txt`](file:///home/bheemasiddartha/Desktop/sem6/BTP/6_lakhs/final_output_oc1/docs/evaluation/evaluation_report_v8.txt)
 
 ---
 

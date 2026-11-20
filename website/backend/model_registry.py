@@ -1,6 +1,7 @@
 import os
 import glob
 import re
+import json
 import logging
 from typing import Dict, List, Optional
 
@@ -8,18 +9,41 @@ logger = logging.getLogger("uvicorn.error")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODELS_DIR = os.path.join(BASE_DIR, "models")
+CONFIG_PATH = os.path.join(BASE_DIR, "models_config.json")
 
 
 def get_model_specs() -> List[dict]:
     """
-    Dynamically discover all models placed in backend/models/.
-    Pairs .pt model checkpoints with their matching metadata .json file.
-    
-    Supported conventions:
-      - best_model_v8.pt <-> metadata_v8.json
-      - best_model_v1.pt <-> metadata_v1.json
-      - <name>.pt <-> metadata_<name>.json or <name>.json
+    Load model specifications from models_config.json in backend/.
+    Preserves the exact order and labels defined in models_config.json.
+    Falls back to dynamic discovery if config is missing.
     """
+    if os.path.isfile(CONFIG_PATH):
+        try:
+            with open(CONFIG_PATH, "r", encoding="utf-8") as f:
+                config_models = json.load(f)
+            models = []
+            for item in config_models:
+                m_file = item.get("model_file", f"best_model_{item['id']}.pt")
+                meta_file = item.get("metadata_file", f"metadata_{item['id']}.json")
+                m_path = os.path.join(MODELS_DIR, m_file)
+                meta_path = os.path.join(MODELS_DIR, meta_file)
+                models.append({
+                    "id": item["id"],
+                    "label": item.get("label", item["id"]),
+                    "description": item.get("description", ""),
+                    "model_file": m_file,
+                    "metadata_file": meta_file,
+                    "model_path": os.path.abspath(m_path),
+                    "metadata_path": os.path.abspath(meta_path),
+                    "is_default": bool(item.get("is_default", False)),
+                })
+            if models and not any(m["is_default"] for m in models):
+                models[0]["is_default"] = True
+            return models
+        except Exception as e:
+            logger.warning("[model_registry] Failed to read models_config.json: %s", e)
+
     if not os.path.isdir(MODELS_DIR):
         return []
 
